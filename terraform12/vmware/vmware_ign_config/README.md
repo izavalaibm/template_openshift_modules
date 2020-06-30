@@ -34,6 +34,8 @@ Supported On RHEL 7.x Linux
 | vcenterdatacenter | vCenter data center| string |  | yes |
 | vmwaredatastore | VMware Datastore | string |  | yes |
 | pullsecret | vBase64 encoded OCP image pull secret | string |  | yes |
+| trustbundle | Base64 encoded Trusted Certificate | string |  | yes |
+| imagecontent | Base64 encoded Image Content Sources for Mirrored Image Repository | string |  | yes |
 
 <br />
 

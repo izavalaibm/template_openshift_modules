@@ -36,6 +36,8 @@ function create_ignition_config(){
 	sudo sed -i -e "s|@vmwaredatastore@|${VM_DSTORE}|" /installer/install-config.yaml
 	sudo sed -i -e "s/@pullsecret@/${PULL_SECRET_DECODE}/" /installer/install-config.yaml
 	sudo sed -i -e "s|@sshkey@|${SSH_KEY}|" /installer/install-config.yaml
+	sudo sed -i -e "s/@trustbundle@/${TRUST_BUNDLE_DECODE}" /installer/install-config.yaml
+	sudo sed -i -e "s/@imagecontent@/${IMAGE_CONTENT_DECODED}/" /installer/install-config.yaml
 	sudo cp /installer/install-config.yaml /installer/install-config.yaml.bak
 	sudo /usr/local/bin/openshift-install create manifests --dir=/installer/	
     sudo sed -i -e "s/mastersSchedulable: true/mastersSchedulable: false/" /installer/manifests/cluster-scheduler-02-config.yml
@@ -117,6 +119,14 @@ function verifyInputs() {
         echo -e "${WARN}Image pull secret is missing; Exiting...${REGULAR}"
         exit 1
     fi
+	if [ -z "$(echo "${TRUST_BUNDLE}" | tr -d '[:space:]')" ]; then
+        echo -e "${WARN}Certificate missing; Exiting...${REGULAR}"
+        exit 1
+    fi
+	if [ -z "$(echo "${_}" | tr -d '[:space:]')" ]; then
+        echo -e "${WARN}_ URL is missing; Exiting...${REGULAR}"
+        exit 1
+    fi
 	if [ -z "$(echo "${OCP_VERSION}" | tr -d '[:space:]')" ]; then
         echo -e "${WARN}OCP version is missing; using default version 4.2.0...${REGULAR}"
     fi
@@ -141,6 +151,8 @@ while test ${#} -gt 0; do
     [[ $1 =~ ^-vd|--vcenterdatacenter ]]      && { VCENTER_DC="${2}";                shift 2; continue; };
     [[ $1 =~ ^-vs|--vmwaredatastore ]]     && { VM_DSTORE="${2}";               shift 2; continue; };
     [[ $1 =~ ^-s|--pullsecret ]]     && { PULL_SECRET="${2}";         shift 2; continue; };
+	[[ $1 =~ ^-tb|--trustbundle ]]     && { TRUST_BUNDLE="${2}";         shift 2; continue; };
+	[[ $1 =~ ^-ic|--imagecontent ]]     && { IMAGE_CONTENT="${2}";         shift 2; continue; };
     [[ $1 =~ ^-h|--host ]]     && { INFRA_IP="${2}";         shift 2; continue; };	
     break;
 done
@@ -174,6 +186,15 @@ if [ -f "/installer/.install_complete" ]; then
 else
 	echo "Initial install"
 	PULL_SECRET_DECODE=`echo $PULL_SECRET | base64 -d`
+	IMAGE_CONTENT_DECODED=`echo $IMAGE_CONTENT | base64 -d`
+	`echo $TRUST_BUNDLE | base64 -d > cerd_decoded`
+	sed -i 's/^/\t/' cerd_decoded
+	sed '/@trustbundle@/{
+    s/@trustbundle@//g
+    r cerd_decoded
+	}' /installer/install-config.yaml
+	rm cerd_decoded
+
 	gen_key
 	get_installer $OCP_VERSION		
 	create_ignition_config

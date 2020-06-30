@@ -86,3 +86,12 @@ variable "pullsecret" {
   description = "Base64 encoded OCP image pull secret."
 }
 
+variable "trustbundle"{
+  type        = string
+  description = "Base64 encoded Trusted Certificate" 
+}
+
+variable "imagecontent"{
+  type        = string
+  description = "Base64 encoded Image Content Sources for Mirrored Image Repository" 
+}
