@@ -38,8 +38,6 @@ resource "vsphere_virtual_machine" "vm" {
   network_interface {
     network_id   = data.vsphere_network.vm_public_network.id
     adapter_type = var.vm_public_adapter_type
-    use_static_mac = true
-    mac_address = "00:50:56:a5:40:33"
   }
 
   network_interface {
@@ -227,8 +225,6 @@ resource "vsphere_virtual_machine" "vm2disk" {
   network_interface {
     network_id   = data.vsphere_network.vm_public_network.id
     adapter_type = var.vm_public_adapter_type
-    use_static_mac = true
-    mac_address = "00:50:56:a5:40:33"
   }
 
   network_interface {
