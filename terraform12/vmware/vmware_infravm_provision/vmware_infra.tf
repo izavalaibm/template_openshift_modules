@@ -229,11 +229,15 @@ resource "vsphere_virtual_machine" "vm2disk" {
   network_interface {
     network_id   = data.vsphere_network.vm_public_network.id
     adapter_type = var.vm_public_adapter_type
+    use_static_mac = true
+    mac_address = "00:50:56:a5:3e:f5"
   }
 
   network_interface {
     network_id   = data.vsphere_network.vm_private_network.id
     adapter_type = var.vm_private_adapter_type
+    use_static_mac = true
+    mac_address = "00:50:56:a5:90:df"
   }
 
   disk {
