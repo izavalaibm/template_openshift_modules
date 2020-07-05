@@ -26,20 +26,20 @@ function create_ignition_config(){
 	sudo mv /tmp/sec_bootstrap.ign /installer/sec_bootstrap.ign
 	sudo mv /tmp/sec_master.ign /installer/sec_master.ign
 	sudo mv /tmp/sec_worker.ign /installer/sec_worker.ign		
-	sudo sed -i -e "s/@domain@/${DOMAIN}/" /installer/install-config.yaml
-	sudo sed -i -e "s/@controlnodes@/${CONTROL_NODES}/" /installer/install-config.yaml
-	sudo sed -i -e "s/@clustername@/${CLUSTER_NAME}/" /installer/install-config.yaml
-	sudo sed -i -e "s/@vcenter@/${VCENTER}/" /installer/install-config.yaml
-	sudo sed -i -e "s/@vcenteruser@/${VCENTER_USER}/" /installer/install-config.yaml
-	sudo sed -i -e "s/@vcenterpassword@/${VCENTER_PASS}/" /installer/install-config.yaml
-	sudo sed -i -e "s/@vcenterdatacenter@/${VCENTER_DC}/" /installer/install-config.yaml
-	sudo sed -i -e "s/@vmwaredatastore@/${VM_DSTORE}/" /installer/install-config.yaml
-	sudo sed -i -e "s/@pullsecret@/${PULL_SECRET_DECODE}/" /installer/install-config.yaml
-	sudo sed -i -e "s/@sshkey@/${SSH_KEY}/" /installer/install-config.yaml
-	sudo sed -i -e "s/@imagecontent@/${IMAGE_CONTENT_DECODED}/" /installer/install-config.yaml
+	sudo sed -i -e "s|@domain@|${DOMAIN}|" |installer|install-config.yaml
+	sudo sed -i -e "s|@controlnodes@|${CONTROL_NODES}|" /installer/install-config.yaml
+	sudo sed -i -e "s|@clustername@|${CLUSTER_NAME}|" /installer/install-config.yaml
+	sudo sed -i -e "s|@vcenter@|${VCENTER}|" /installer/install-config.yaml
+	sudo sed -i -e "s|@vcenteruser@|${VCENTER_USER}|" /installer/install-config.yaml
+	sudo sed -i -e "s|@vcenterpassword@|${VCENTER_PASS}|" /installer/install-config.yaml
+	sudo sed -i -e "s|@vcenterdatacenter@|${VCENTER_DC}|" /installer/install-config.yaml
+	sudo sed -i -e "s|@vmwaredatastore@|${VM_DSTORE}|" /installer/install-config.yaml
+	sudo sed -i -e "s|@pullsecret@|${PULL_SECRET_DECODE}|" /installer/install-config.yaml
+	sudo sed -i -e "s|@sshkey@|${SSH_KEY}|" /installer/install-config.yaml
+	sudo sed -i -e "s|@imagecontent@|${IMAGE_CONTENT_DECODED}|" /installer/install-config.yaml
 	sudo cp /installer/install-config.yaml /installer/install-config.yaml.bak
 	sudo /usr/local/bin/openshift-install create manifests --dir=/installer/	
-    sudo sed -i -e "s/mastersSchedulable: true/mastersSchedulable: false/" /installer/manifests/cluster-scheduler-02-config.yml
+    sudo sed -i -e "s|mastersSchedulable: true|mastersSchedulable: false|" /installer/manifests/cluster-scheduler-02-config.yml
     sudo /usr/local/bin/openshift-install create ignition-configs --dir=/installer/
     if [ -d "/var/www/html/" ]; then
     	sudo cp /installer/bootstrap.ign /var/www/html/bootstrap.ign
