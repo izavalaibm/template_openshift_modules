@@ -92,7 +92,6 @@ function start_nfs_server() {
         sudo systemctl restart nfs-server
         sudo systemctl restart rpc-statd
         sudo systemctl restart nfs-idmapd
-        sudo systemctl status nfs
     fi
 }
 
