@@ -62,7 +62,7 @@ function install_nfs_server() {
         sudo yum -y install nfs-utils rpcbind
         sudo systemctl enable nfs-server
         sudo systemctl enable rpcbind
-        sudo systemctl enable rpc-statd.service
+        sudo systemctl enable rpc-statd
         sudo systemctl enable nfs-idmapd
     fi
 }
@@ -90,8 +90,8 @@ function start_nfs_server() {
     elif [[ $PLATFORM == *"rhel"* ]]; then
         sudo systemctl restart rpcbind
         sudo systemctl restart nfs-server
-        sudo systemctl restart nfs-lock
-        sudo systemctl restart nfs-idmap
+        sudo systemctl restart rpc-statd
+        sudo systemctl restart nfs-idmapd
         sudo systemctl status nfs
     fi
 }
