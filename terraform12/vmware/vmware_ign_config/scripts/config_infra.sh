@@ -36,7 +36,6 @@ function create_ignition_config(){
 	sudo sed -i -e "s|@vmwaredatastore@|${VM_DSTORE}|" /installer/install-config.yaml
 	sudo sed -i -e "s/@pullsecret@/${PULL_SECRET_DECODE}/" /installer/install-config.yaml
 	sudo sed -i -e "s|@sshkey@|${SSH_KEY}|" /installer/install-config.yaml
-	sudo sed -i -e "s/@trustbundle@/${TRUST_BUNDLE_DECODE}" /installer/install-config.yaml
 	sudo sed -i -e "s/@imagecontent@/${IMAGE_CONTENT_DECODED}/" /installer/install-config.yaml
 	sudo cp /installer/install-config.yaml /installer/install-config.yaml.bak
 	sudo /usr/local/bin/openshift-install create manifests --dir=/installer/	
@@ -188,7 +187,7 @@ else
 	PULL_SECRET_DECODE=`echo $PULL_SECRET | base64 -d`
 	IMAGE_CONTENT_DECODED=`echo $IMAGE_CONTENT | base64 -d`
 	`echo $TRUST_BUNDLE | base64 -d > cerd_decoded`
-	sed -i 's/^/\t/' cerd_decoded
+	sed -i 's/^/  /' cerd_decoded
 	sed '/@trustbundle@/{
     s/@trustbundle@//g
     r cerd_decoded
