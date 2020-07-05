@@ -62,8 +62,8 @@ function install_nfs_server() {
         sudo yum -y install nfs-utils rpcbind
         sudo systemctl enable nfs-server
         sudo systemctl enable rpcbind
-        sudo systemctl enable nfs-lock
-        sudo systemctl enable nfs-idmap
+        sudo systemctl enable rpc-statd
+        sudo systemctl enable nfs-idmapd
     fi
 }
 
@@ -78,7 +78,13 @@ function create_nfs_mount_points() {
             echo "$MOUNT_POINT/$last_folder doesn't exist, creating..."
             sudo mkdir -p $MOUNT_POINT/$last_folder
         fi
-        echo "$MOUNT_POINT/$last_folder  *(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
+        if grep -Fxq "*(rw,sync,no_subtree_check,no_root_squash)" /etc/exports
+        then
+         echo "*(rw,sync,no_subtree_check,no_root_squash) already present"
+        else
+          echo "$MOUNT_POINT/$last_folder  *(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
+        fi
+        
     done
 }
 
@@ -90,9 +96,8 @@ function start_nfs_server() {
     elif [[ $PLATFORM == *"rhel"* ]]; then
         sudo systemctl restart rpcbind
         sudo systemctl restart nfs-server
-        sudo systemctl restart nfs-lock
-        sudo systemctl restart nfs-idmap
-        sudo systemctl status nfs
+        sudo systemctl restart rpc-statd
+        sudo systemctl restart nfs-idmapd
     fi
 }
 
