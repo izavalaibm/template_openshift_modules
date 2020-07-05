@@ -187,7 +187,7 @@ else
 	PULL_SECRET_DECODE=`echo $PULL_SECRET | base64 -d`
 	IMAGE_CONTENT_DECODED=`echo $IMAGE_CONTENT | base64 -d`
 	`echo $TRUST_BUNDLE | base64 -d > cerd_decoded`
-	sed -i 's/^/  /' cerd_decoded
+	sed -i -e 's/^/  /' cerd_decoded
 	sed '/@trustbundle@/{
     s/@trustbundle@//g
     r cerd_decoded
