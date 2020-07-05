@@ -78,7 +78,13 @@ function create_nfs_mount_points() {
             echo "$MOUNT_POINT/$last_folder doesn't exist, creating..."
             sudo mkdir -p $MOUNT_POINT/$last_folder
         fi
-        echo "$MOUNT_POINT/$last_folder  *(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
+        if grep -Fxq "*(rw,sync,no_subtree_check,no_root_squash)" /etc/exports
+        then
+         echo "*(rw,sync,no_subtree_check,no_root_squash) already present"
+        else
+          echo "$MOUNT_POINT/$last_folder  *(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
+        fi
+        
     done
 }
 
