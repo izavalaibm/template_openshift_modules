@@ -62,8 +62,8 @@ function install_nfs_server() {
         sudo yum -y install nfs-utils rpcbind
         sudo systemctl enable nfs-server
         sudo systemctl enable rpcbind
-        sudo systemctl enable nfs-lock
-        sudo systemctl enable nfs-idmap
+        sudo systemctl enable rpc-statd.service
+        sudo systemctl enable nfs-idmapd
     fi
 }
 
