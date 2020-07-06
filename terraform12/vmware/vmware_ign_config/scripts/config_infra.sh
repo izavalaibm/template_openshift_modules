@@ -37,12 +37,12 @@ function create_ignition_config(){
 	sudo sed -i -e "s|@pullsecret@|${PULL_SECRET_DECODE}|" /installer/install-config.yaml
 	sudo sed -i -e "s|@sshkey@|${SSH_KEY}|" /installer/install-config.yaml
 	sudo sed -i -e "s|@imagecontent@|${IMAGE_CONTENT_DECODED}|" /installer/install-config.yaml
-	sed '/@imagecontent@/{
+	sed -i '/@imagecontent@/{
     s/@imagecontent@//g
     r /installer/ic_decoded
 	}' /installer/install-config.yaml
 	sed -i -e 's/^/  /' /installer/cerd_decoded
-	sed '/@trustbundle@/{
+	sed -i '/@trustbundle@/{
     s/@trustbundle@//g
     r /installer/cerd_decoded
 	}' /installer/install-config.yaml
