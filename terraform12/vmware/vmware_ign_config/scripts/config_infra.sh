@@ -37,6 +37,10 @@ function create_ignition_config(){
 	sudo sed -i -e "s|@pullsecret@|${PULL_SECRET_DECODE}|" /installer/install-config.yaml
 	sudo sed -i -e "s|@sshkey@|${SSH_KEY}|" /installer/install-config.yaml
 	sudo sed -i -e "s|@imagecontent@|${IMAGE_CONTENT_DECODED}|" /installer/install-config.yaml
+	sed '/@imagecontent@/{
+    s/@imagecontent@//g
+    r /installer/ic_decoded
+	}' /installer/install-config.yaml
 	sed -i -e 's/^/  /' /installer/cerd_decoded
 	sed '/@trustbundle@/{
     s/@trustbundle@//g
@@ -194,7 +198,7 @@ else
 	PULL_SECRET_DECODE=`echo $PULL_SECRET | base64 -d`
 	gen_key
 	get_installer $OCP_VERSION	
-	IMAGE_CONTENT_DECODED=`echo $IMAGE_CONTENT | base64 -d`
+	`echo $IMAGE_CONTENT | base64 -d > /installer/ic_decoded`
 	`echo $TRUST_BUNDLE | base64 -d > /installer/cerd_decoded`	
 	create_ignition_config
 	create_control_ign ${CONTROL_NODES}
