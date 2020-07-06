@@ -37,6 +37,12 @@ function create_ignition_config(){
 	sudo sed -i -e "s|@pullsecret@|${PULL_SECRET_DECODE}|" /installer/install-config.yaml
 	sudo sed -i -e "s|@sshkey@|${SSH_KEY}|" /installer/install-config.yaml
 	sudo sed -i -e "s|@imagecontent@|${IMAGE_CONTENT_DECODED}|" /installer/install-config.yaml
+	sed -i -e 's/^/  /' /installer/cerd_decoded
+	sed '/@trustbundle@/{
+    s/@trustbundle@//g
+    r /installer/cerd_decoded
+	}' /installer/install-config.yaml
+	rm /installer/cerd_decoded
 	sudo cp /installer/install-config.yaml /installer/install-config.yaml.bak
 	sudo /usr/local/bin/openshift-install create manifests --dir=/installer/	
     sudo sed -i -e "s|mastersSchedulable: true|mastersSchedulable: false|" /installer/manifests/cluster-scheduler-02-config.yml
@@ -185,17 +191,10 @@ if [ -f "/installer/.install_complete" ]; then
 else
 	echo "Initial install"
 	PULL_SECRET_DECODE=`echo $PULL_SECRET | base64 -d`
-	IMAGE_CONTENT_DECODED=`echo $IMAGE_CONTENT | base64 -d`
-	`echo $TRUST_BUNDLE | base64 -d > cerd_decoded`
-	sed -i -e 's/^/  /' cerd_decoded
-	sed '/@trustbundle@/{
-    s/@trustbundle@//g
-    r cerd_decoded
-	}' /installer/install-config.yaml
-	rm cerd_decoded
-
 	gen_key
-	get_installer $OCP_VERSION		
+	get_installer $OCP_VERSION	
+	IMAGE_CONTENT_DECODED=`echo $IMAGE_CONTENT | base64 -d`
+	`echo $TRUST_BUNDLE | base64 -d > /installer/cerd_decoded`	
 	create_ignition_config
 	create_control_ign ${CONTROL_NODES}
 	create_compute_ign ${COMPUTE_NODES}
