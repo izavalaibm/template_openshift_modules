@@ -41,6 +41,7 @@ function create_ignition_config(){
     s/@imagecontent@//g
     r /installer/ic_decoded
 	}' /installer/install-config.yaml
+	cat /installer/install-config.yaml
 	sed -i -e 's/^/  /' /installer/cerd_decoded
 	sed -i '/@trustbundle@/{
     s/@trustbundle@//g
