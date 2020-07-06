@@ -23,7 +23,6 @@ function get_installer(){
 function create_ignition_config(){
 	SSH_KEY=`sudo cat ~/.ssh/id_rsa_ocp.pub`
 	sudo mv /tmp/install-config.yaml.tmpl /installer/install-config.yaml
-	cat /installer/install-config.yaml
 	sudo mv /tmp/sec_bootstrap.ign /installer/sec_bootstrap.ign
 	sudo mv /tmp/sec_master.ign /installer/sec_master.ign
 	sudo mv /tmp/sec_worker.ign /installer/sec_worker.ign		
@@ -44,6 +43,7 @@ function create_ignition_config(){
     r /installer/cerd_decoded
 	}' /installer/install-config.yaml
 	rm /installer/cerd_decoded
+	cat /installer/install-config.yaml
 	sudo cp /installer/install-config.yaml /installer/install-config.yaml.bak
 	sudo /usr/local/bin/openshift-install create manifests --dir=/installer/	
     sudo sed -i -e "s|mastersSchedulable: true|mastersSchedulable: false|" /installer/manifests/cluster-scheduler-02-config.yml
