@@ -34,7 +34,7 @@ function create_ignition_config(){
 	sudo sed -i -e "s|@vcenterpassword@|${VCENTER_PASS}|" /installer/install-config.yaml
 	sudo sed -i -e "s|@vcenterdatacenter@|${VCENTER_DC}|" /installer/install-config.yaml
 	sudo sed -i -e "s|@vmwaredatastore@|${VM_DSTORE}|" /installer/install-config.yaml
-	sudo sed -i -e "s/@pullsecret@/${PULL_SECRET_DECODE}/" /installer/install-config.yaml
+	sudo sed -i -e "s|?pullsecret?|${PULL_SECRET_DECODE}|" /installer/install-config.yaml
 	sudo sed -i -e "s|@sshkey@|${SSH_KEY}|" /installer/install-config.yaml
 	sed -i '/@imagecontent@/{
     s/@imagecontent@//g
